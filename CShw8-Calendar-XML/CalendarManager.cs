@@ -23,7 +23,6 @@ public enum EventProperties
 {
     EventTitle = 0, EventStartTime, EventEndTime, EventRepeatOption, EventLifeTimeDays
 }
-
 public class CalendarManager
 {
     public Calendar Calendar { get; set; }

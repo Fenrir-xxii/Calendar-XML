@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace CShw8_Calendar_XML;
 
+public delegate void PrintAssignment(ICalendarAssignment item);
 public class Calendar
 {
     public List<ICalendarAssignment> Assignments;
+    public PrintAssignment Printer;
     public Calendar()
     {
         Assignments = new List<ICalendarAssignment>();
@@ -31,10 +33,25 @@ public class Calendar
     {
         Assignments.Sort((a1, a2) => DateTime.Compare(a1.EndTime, a2.EndTime));
     }
+    public void PrintAssignment(ICalendarAssignment item)
+    {
+        if (item is Task)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+        }
+        else if (item is Event)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        }
+        Console.WriteLine(item);
+        Console.ResetColor();
+    }
     public void ShowAssignments()
     {
         Console.Clear();
-        Assignments.ForEach(assignment => { Console.WriteLine(assignment); });
+
+        Printer = PrintAssignment;
+        Assignments.ForEach(assignment => Printer.Invoke(assignment));
     }
     public void DrawCalendar(int month, int year)
     {
@@ -107,5 +124,9 @@ public class Calendar
         Console.ForegroundColor = ConsoleColor.DarkGreen;
         Console.WriteLine("Use '<' / '>' to navigate,\nand ESC to return");
         Console.ResetColor();
+    }
+    public void Info(ICalendarAssignment item)
+    {
+        Console.WriteLine($"#{Assignments.IndexOf(item)+1} {item}");
     }
 }
